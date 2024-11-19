@@ -17,8 +17,19 @@ from pages.linkedin_repurposer import show_linkedin_repurposer
 from pages.document_analyzer import show_document_analyzer
 
 # Load environment variables
-load_dotenv()
-openai.api_key = os.getenv('OPENAI_API_KEY')
+# Get API key from environment variable or Streamlit secrets
+def get_openai_api_key():
+    if 'OPENAI_API_KEY' in st.secrets:
+        return st.secrets['OPENAI_API_KEY']
+    else:
+        # For local development with .env file
+        from dotenv import load_dotenv
+        import os
+        load_dotenv()
+        return os.getenv('OPENAI_API_KEY')
+
+# Set the API key
+openai.api_key = get_openai_api_key()
 
 # Verify API key is present
 if not openai.api_key:
